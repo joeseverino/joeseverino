@@ -8,8 +8,6 @@ I use this GitHub to document and publish projects related to security engineeri
 
 ## Featured Projects
 
-## Featured Projects
-
 - **[severino-labs-security-layer](https://github.com/joeseverino/severino-labs-security-layer)** — Custom WordPress security plugin for application hardening, file integrity monitoring, security event logging, browser security headers, and passkey-first login customization.
 - **[tls-cert-renewal-automation](https://github.com/joeseverino/tls-cert-renewal-automation)** — Automates Let’s Encrypt wildcard certificate renewal and cPanel deployment using Certbot, Cloudflare DNS validation, and cPanel UAPI.
 - **[zsh-git-deploy-workflow](https://github.com/joeseverino/zsh-git-deploy-workflow)** — Reusable deployment workflow with GitHub integration, SSH deploy keys, signed local commits, and fast-forward-only production pulls.
