@@ -1,0 +1,28 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Local env
+.env
+.env.local
+
+# Logs
+*.log
+
+# Backups
+*.bak
+*.bak.*
+
+# Common dependency / build dirs
+node_modules/
+__pycache__/
+*.pyc
+/vendor/
+/build/
+/dist/
