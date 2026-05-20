@@ -4,22 +4,23 @@ Cybersecurity graduate student at Georgia Tech focused on network security, secu
 
 **Certifications:** CCNA, CompTIA Security+, ISC2 Certified in Cybersecurity (CC)
 
-Most of my projects are built around real systems I run myself: WordPress hardening, TLS automation, private PKI, DNS filtering, reverse proxy management, local AI tooling with safety boundaries, and homelab infrastructure.
+Most of my projects are built around real systems I run myself: WordPress hardening, TLS automation, private PKI, DNS filtering, local AI tooling with safety boundaries, and homelab infrastructure.
 
 ## Featured Projects
 
 - **[severino-vault-mcp](https://github.com/joeseverino/severino-vault-mcp)** - Local-first MCP server that gives AI assistants safe access to an Obsidian operations vault. Layered CI security tooling (CodeQL, pip-audit, OSSF Scorecard, Dependabot), documented threat model, and a four-tier sensitivity gate for credential-adjacent content.
+- **[jseverino.com](https://github.com/joeseverino/jseverino.com)** - Public Astro portfolio deployed on Cloudflare Pages from a private Obsidian vault. Includes vault-to-content sync, static publishing checks, RSS/sitemap generation, Cloudflare security headers, and a D1-backed contact form protected by Turnstile.
 - **[severino-labs-security-layer](https://github.com/joeseverino/severino-labs-security-layer)** - Custom WordPress security plugin for application hardening, file integrity monitoring, security event logging, browser security headers, and passkey-first login customization.
 - **[tools](https://github.com/joeseverino/tools)** - Personal macOS CLI suite: age-based file encryption with Keychain-cached unlock, vault sync, dotfile backup, DNS latency diagnostics, and a bridge between an Obsidian vault and a private Django docs index.
 - **[zsh-git-deploy-workflow](https://github.com/joeseverino/zsh-git-deploy-workflow)** - Zero-dependency Git deploy pipeline for solo devs. One bootstrap command wires SSH keys, GitHub integration, and per-project shell commands. `acmepush "fix: message"` stages, commits, pushes, and deploys without CI, YAML, or dashboards.
 - **[tls-cert-renewal-automation](https://github.com/joeseverino/tls-cert-renewal-automation)** - Automates Let's Encrypt wildcard certificate renewal and cPanel deployment using Certbot, Cloudflare DNS validation, and cPanel UAPI.
-- **[caddy-manager](https://github.com/joeseverino/caddy-manager)** - CLI tool for managing Caddy reverse proxy sites, automatic TLS snippets, and config backups.
 - **[cert-generator](https://github.com/joeseverino/cert-generator)** - Private PKI helper for issuing TLS certificates from an offline root CA VM.
 
 ## Focus Areas
 
 - Network security
 - Infrastructure automation
+- Static site publishing
 - WordPress hardening
 - TLS and PKI
 - DNS filtering
