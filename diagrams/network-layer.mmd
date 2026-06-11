@@ -1,0 +1,32 @@
+flowchart TB
+    ca["Private root CA<br/>offline VM — booted only to issue"]
+    doh["Cloudflare DoH<br/>encrypted upstream"]
+
+    subgraph tailnet["Tailscale tailnet (WireGuard mesh, tailnet lock)"]
+        admin["Admin devices<br/>(signing nodes)"]
+
+        subgraph host["Homelab host — subnet router + exit node (residential)"]
+            subgraph vm["Homelab VM — Docker Engine"]
+                adguard["AdGuard Home<br/>private DNS"]
+                npm["Nginx Proxy Manager<br/>TLS front door: HQ · AdGuard · Portainer"]
+                pocketid["Pocket ID<br/>OIDC SSO"]
+                portainer["Portainer"]
+                hq["Severino HQ"]
+            end
+        end
+
+        subgraph vps["Cloud VPS — exit node (datacenter)"]
+            caddy["Caddy<br/>TLS for private services"]
+            kuma["Uptime Kuma<br/>external monitoring"]
+            agent["Portainer agent"]
+        end
+    end
+
+    admin -->|"all DNS, over the tunnel"| adguard
+    pocketid -.->|"OIDC sign-in"| hq
+    pocketid -.->|"OIDC sign-in"| portainer
+    portainer -->|"manages VPS containers"| agent
+    caddy -->|"fronts"| kuma
+    kuma -.->|"monitors the homelab<br/>from outside it"| host
+    ca -.->|"issues internal TLS certs"| npm
+    adguard -->|"DNS never leaves in plaintext"| doh
