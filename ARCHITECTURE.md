@@ -15,40 +15,11 @@ build stories live on [jseverino.com](https://jseverino.com).
 
 ## The Map
 
-```mermaid
-flowchart TB
-    subgraph mac["Local Mac"]
-        vault[("Severino Labs vault<br/>Obsidian markdown + YAML frontmatter")]
-        mcp["severino-vault-mcp<br/>stdio MCP server + CLI"]
-        ai["AI sessions<br/>(Claude Code)"]
-        tools["tools<br/>CLI control plane"]
-        siterepo["jseverino.com repo<br/>(Astro)"]
-        brand["branding-engine"]
-        drift["sitedrift"]
-    end
+![The full system map: on the local Mac, AI sessions and the tools CLI drive severino-vault-mcp, which reads and writes the Severino Labs vault; the vault syncs a docs manifest to Severino HQ on the private tailnet and publishes the public subset into the jseverino.com Astro repo alongside branding-engine assets; a git push triggers the Cloudflare Pages build serving jseverino.com with D1 behind it, reviewed by sitedrift against live](diagrams/architecture.png)
 
-    subgraph tailnet["Private tailnet (WireGuard)"]
-        hq["Severino HQ<br/>private Django ops app"]
-    end
-
-    subgraph cf["Cloudflare"]
-        pages["Pages build"]
-        site["jseverino.com"]
-        d1[("D1<br/>contact form + CSP reports")]
-    end
-
-    ai -->|"MCP tools"| mcp
-    tools -->|"CLI subcommands"| mcp
-    mcp <-->|"search / read / validated writes"| vault
-    vault -->|"hq sync · docs manifest"| hq
-    vault -->|"site publish · published: true subset"| siterepo
-    brand -->|"generated brand assets"| siterepo
-    siterepo -->|"git push"| pages
-    pages --> site
-    site --> d1
-    mcp -.->|"wrangler, read-only ops"| d1
-    drift -.->|"DEV vs LIVE review"| site
-```
+<sup>Diagram source: [`diagrams/architecture.mmd`](diagrams/architecture.mmd) —
+pre-rendered with `diagrams/render.sh` so every browser sees the same
+pixels.</sup>
 
 ## The Pieces
 

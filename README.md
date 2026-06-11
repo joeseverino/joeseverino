@@ -21,21 +21,7 @@ Most of my projects are built around real systems I run myself: local AI tooling
 Most of these projects are pieces of one system: a private Obsidian vault is
 the single source of truth, and everything else derives from it.
 
-```mermaid
-flowchart LR
-    vault[("Obsidian vault<br/>source of truth")]
-    mcp["severino-vault-mcp<br/>AI recall + CLI"]
-    hq["Severino HQ<br/>private ops app"]
-    site["jseverino.com<br/>Astro on Cloudflare Pages"]
-    ai["AI sessions"]
-    tools["tools CLI"]
-
-    ai -->|"MCP tools"| mcp
-    tools -->|"same code path"| mcp
-    mcp <-->|"read / validated writes"| vault
-    vault -->|"hq sync"| hq
-    vault -->|"published: true subset"| site
-```
+![AI sessions and the tools CLI drive severino-vault-mcp through one shared code path; the MCP reads and writes the Obsidian vault, which syncs to Severino HQ and publishes the public subset to jseverino.com](diagrams/readme-flow.png)
 
 The full map — every component, how they talk, and the whys — is in
 **[ARCHITECTURE.md](ARCHITECTURE.md)**.

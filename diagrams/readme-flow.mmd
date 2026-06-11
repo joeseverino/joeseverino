@@ -1,0 +1,13 @@
+flowchart LR
+    vault[("Obsidian vault<br/>source of truth")]
+    mcp["severino-vault-mcp<br/>AI recall + CLI"]
+    hq["Severino HQ<br/>private ops app"]
+    site["jseverino.com<br/>Astro on Cloudflare Pages"]
+    ai["AI sessions"]
+    tools["tools CLI"]
+
+    ai -->|"MCP tools"| mcp
+    tools -->|"same code path"| mcp
+    mcp <-->|"read / validated writes"| vault
+    vault -->|"hq sync"| hq
+    vault -->|"published: true subset"| site

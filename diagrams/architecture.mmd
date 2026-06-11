@@ -1,0 +1,32 @@
+flowchart TB
+    subgraph mac["Local Mac"]
+        vault[("Severino Labs vault<br/>Obsidian markdown + YAML frontmatter")]
+        mcp["severino-vault-mcp<br/>stdio MCP server + CLI"]
+        ai["AI sessions<br/>(Claude Code)"]
+        tools["tools<br/>CLI control plane"]
+        siterepo["jseverino.com repo<br/>(Astro)"]
+        brand["branding-engine"]
+        drift["sitedrift"]
+    end
+
+    subgraph tailnet["Private tailnet (WireGuard)"]
+        hq["Severino HQ<br/>private Django ops app"]
+    end
+
+    subgraph cf["Cloudflare"]
+        pages["Pages build"]
+        site["jseverino.com"]
+        d1[("D1<br/>contact form + CSP reports")]
+    end
+
+    ai -->|"MCP tools"| mcp
+    tools -->|"CLI subcommands"| mcp
+    mcp <-->|"search / read / validated writes"| vault
+    vault -->|"hq sync · docs manifest"| hq
+    vault -->|"site publish · published: true subset"| siterepo
+    brand -->|"generated brand assets"| siterepo
+    siterepo -->|"git push"| pages
+    pages --> site
+    site --> d1
+    mcp -.->|"wrangler, read-only ops"| d1
+    drift -.->|"DEV vs LIVE review"| site
