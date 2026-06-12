@@ -15,7 +15,7 @@ build stories live on [jseverino.com](https://jseverino.com).
 
 ## The Map
 
-![The full system map: on the local Mac, AI sessions and the tools CLI drive severino-vault-mcp, which reads and writes the Severino Labs vault; the vault syncs a docs manifest to Severino HQ on the private tailnet and publishes the public subset into the jseverino.com Astro repo alongside branding-engine assets; a git push triggers the Cloudflare Pages build serving jseverino.com with D1 behind it, reviewed by sitedrift against live](diagrams/architecture.png)
+![The full system map: on the local Mac, AI sessions and the tools CLI drive severino-vault-mcp, which reads and writes the Severino Labs vault and syncs a docs manifest plus the shared schema to Severino HQ on the private tailnet; the vault's published subset is snapshotted into the jseverino.com Astro repo alongside branding-engine assets; a git push triggers the Cloudflare Pages build serving jseverino.com with D1 behind it, reviewed by sitedrift against live](diagrams/architecture.png)
 
 <sup>Diagram source: [`diagrams/architecture.mmd`](diagrams/architecture.mmd),
 pre-rendered with `diagrams/render.sh` so every browser sees the same
@@ -52,16 +52,22 @@ generic tutorial when I have my own four-line runbook.
   search + read together, because two-step tool choreography gave smaller
   models (LM Studio and friends) a chance to corrupt the doc ID between
   search and read. That came out of a real observed failure, not theory.
-- **Two faces, one code path.** The same Python functions are exposed as MCP
-  tools for AI sessions *and* as plain CLI subcommands for scripts. When the
-  `site` CLI validates a writeup, it runs the exact functions an AI session
-  would, so validation logic cannot drift between the interactive and
+- **Two faces, one code path.** The same FastMCP-free service functions are
+  exposed as MCP tools for AI sessions *and* as plain CLI subcommands for
+  scripts, returning one JSON result shape that the `site` CLI and its terminal
+  UI both parse. When the `site` CLI validates a writeup it runs the exact
+  functions an AI session would, so validation, writes, schema, and atomic file
+  replacement all live once and cannot drift between the interactive and
   scripted paths.
-- **Reaches the edge, read-only.** Operational tools list contact-form
-  submissions and CSP violation reports from Cloudflare D1 via wrangler, so
-  triage happens in the same session as everything else.
+- **Reaches the edge, read-only, same gate.** Operational tools list
+  contact-form submissions and CSP violation reports from Cloudflare D1 via
+  wrangler, so triage happens in the same session as everything else. Contact
+  PII is redacted by default — names abbreviated, emails masked, message
+  previewed — and full release takes the same explicit, audited unlock as a
+  `restricted` doc body. The sensitivity gate covers operator PII, not just the
+  vault.
 
-### Severino HQ — the private ops app
+### [Severino HQ](https://github.com/joeseverino/severino-hq) — the private ops app
 
 A Django 5 app (SQLite + gunicorn) running as a Docker Engine container on the
 homelab server, with named volumes for data, media, and exports. Reachable
@@ -75,10 +81,19 @@ structure.** `hq sync` regenerates HQ's records from vault frontmatter:
 metadata, relationships, and pointers only. Runbook bodies and secrets never
 enter HQ, so its database is never the interesting target.
 
-Deployment is one command: `hq ship` runs local checks, commits, pushes, has
-the server pull over a **read-only deploy key** (the server can never push),
-rebuilds the container, runs a remote Django check, and re-syncs the docs
-index. My primary SSH keys never exist on the server.
+The frontmatter contract HQ validates against isn't HQ's own copy — it's the
+MCP's schema, emitted as JSON and committed into HQ, so the importer can never
+reject a value the MCP just wrote. One definition, enforced on both sides of
+the sync.
+
+Deployment is a gated pipeline, not an SSH session. A push to `main` (via git
+or `hq ship`) runs the checks in GitHub Actions — lint, tests on two Python
+versions, a `check --deploy` posture gate, and pip-audit — then builds a
+container image, scans it with Trivy, and **only on green** does a self-hosted
+runner on the homelab pull the scanned image from GHCR and restart the
+container. The runner dials out to GitHub; nothing inbound is ever opened,
+there is no SSH in the deploy path at all, and a red commit physically cannot
+reach the box.
 
 ### [jseverino.com](https://github.com/joeseverino/jseverino.com) — the public subset
 
@@ -149,9 +164,12 @@ bookkeeping.
 *The `site manage` TUI editing one writeup's frontmatter: every save goes
 through the MCP's validated code path, never raw YAML edits.*
 
-**An HQ code change.** `hq ship -m "fix dashboard"`: checks, commit, push,
-server pulls read-only, container rebuilds, remote Django check, docs
-re-sync. One command, and the failure of any step stops the rest.
+**An HQ code change.** `hq ship -m "fix dashboard"` runs local checks,
+commits, and pushes. The push triggers the gated GitHub Actions pipeline —
+lint, tests, deploy-posture check, pip-audit, image build, Trivy scan — and
+only when every gate is green does the homelab's self-hosted runner pull the
+scanned image and restart the container. No step is manual, and a red commit
+can't ship.
 
 **A brand change.** Edit one value in the brand config, regenerate, and
 review the diff with sitedrift against live production. The comparison
@@ -172,6 +190,12 @@ gets a check instead of a convention:
   surfaces (vault schema doc, site Zod schema, MCP tool signature, MCP CLI
   flags, and the TUI editor) by a parity script that fails CI on any
   mismatch.
+- **Schema single-source.** The core frontmatter enums (doc types,
+  environments, sensitivities, ID prefixes) are defined once in the MCP and
+  emitted as JSON. Severino HQ validates its importer against that exact output,
+  and the vault's own schema doc is checked against it too, so the MCP can never
+  write a value HQ would reject. `hq schema --check` fails on any drift across
+  all three.
 - **Install drift.** The MCP ships a `--fingerprint` flag hashing its
   installed sources; doctor compares it against the source repo so a stale
   install can't silently disagree with the code.
@@ -219,8 +243,9 @@ edge.
    default.
 4. **Repeated operations become one command.** If a task needs a runbook's
    worth of shell commands, it gets folded into the CLI suite.
-5. **Every seam between two systems gets a check.** Parity scripts, doctor
-   commands, and fingerprints make integration drift loud instead of silent.
+5. **Every seam between two systems gets a check.** Parity scripts, a
+   single-source schema with `--check` guards, doctor commands, and fingerprints
+   make integration drift loud instead of silent.
 6. **AI is grounded or it is silent.** Assistants answer from real docs
    through the MCP, or say the doc doesn't exist — never from generic memory.
 

@@ -9,5 +9,5 @@ flowchart LR
     ai -->|"MCP tools"| mcp
     tools -->|"same code path"| mcp
     mcp <-->|"read / validated writes"| vault
-    vault -->|"hq sync"| hq
+    mcp -->|"hq sync"| hq
     vault -->|"published: true subset"| site

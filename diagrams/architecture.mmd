@@ -1,3 +1,4 @@
+%%{init: {'flowchart': {'rankSpacing': 80, 'nodeSpacing': 55}}}%%
 flowchart TB
     subgraph mac["Local Mac"]
         vault[("Severino Labs vault<br/>Obsidian markdown + YAML frontmatter")]
@@ -9,7 +10,13 @@ flowchart TB
         drift["sitedrift"]
     end
 
+    subgraph gh["GitHub Actions (gated CI/CD)"]
+        ci["severino-hq pipeline<br/>lint · test · deploy-check · scan"]
+        ghcr[("GHCR<br/>scanned image")]
+    end
+
     subgraph tailnet["Private tailnet (WireGuard)"]
+        runner["self-hosted runner<br/>(on the homelab)"]
         hq["Severino HQ<br/>private Django ops app"]
     end
 
@@ -22,11 +29,15 @@ flowchart TB
     ai -->|"MCP tools"| mcp
     tools -->|"CLI subcommands"| mcp
     mcp <-->|"search / read / validated writes"| vault
-    vault -->|"hq sync · docs manifest"| hq
+    mcp -->|"hq sync · docs manifest + shared schema"| hq
+    tools -->|"hq ship · git push to main"| ci
+    ci -->|"on green"| ghcr
+    ghcr -->|"runner pulls image"| runner
+    runner -->|"restart container"| hq
     vault -->|"site publish · published: true subset"| siterepo
     brand -->|"generated brand assets"| siterepo
     siterepo -->|"git push"| pages
     pages --> site
     site --> d1
-    mcp -.->|"wrangler, read-only ops"| d1
+    mcp -.->|"wrangler · gated D1 ops"| d1
     drift -.->|"DEV vs LIVE review"| site
