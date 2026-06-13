@@ -123,6 +123,12 @@ command here. The CLIs are the deterministic control plane; AI is optional
 everywhere, automation is not. Even the README is kept honest: every measured
 claim in it has a benchmark script that asserts it in CI.
 
+Each tool emits its whole command surface as one JSON spec — `-h`, the machine
+`--describe`, and an interactive explorer all derive from it, with per-command
+*effect* metadata (read → deploy blast-radius) so an AI agent can risk-gate
+before acting. `tools describe --repos` federates the MCP into the same
+contract, so one document describes the surface across repos.
+
 ### [branding-engine](https://github.com/joeseverino/branding-engine) — one brand source
 
 A published [npm package](https://www.npmjs.com/package/branding-engine) that
@@ -201,10 +207,16 @@ gets a check instead of a convention:
   install can't silently disagree with the code.
 - **Seam drift.** Doctor commands verify every CLI-to-npm-script seam
   resolves, plus security headers, contrast ratios, and dependency audits.
+- **Command-surface drift.** Each tool's human help and its machine-readable
+  JSON render from one spec, so they can't diverge; round-trip, bash/zsh
+  byte-parity, spec↔dispatch, and effect-enum guards enforce it in CI.
 - **Supply chain.** The site repo runs SHA-pinned GitHub Actions: CodeQL,
   dependency review, SBOM generation, OpenSSF Scorecard, link checking, and
   scheduled Lighthouse runs, keeping the code-scanning dashboard at zero
-  open alerts.
+  open alerts. Code scanning (CodeQL), dependency updates (Dependabot), and
+  dependency audits now run across the Python and tooling repos too, and every
+  repo's `main` is branch-protected — merges need a green CI run and resolved
+  review threads.
 
 ## The Network Underneath
 
