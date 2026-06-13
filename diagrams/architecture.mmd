@@ -5,6 +5,7 @@ flowchart TB
         mcp["severino-vault-mcp<br/>stdio MCP server + CLI"]
         ai["AI sessions<br/>(Claude Code)"]
         tools["tools<br/>CLI control plane"]
+        cordon["cordon<br/>command-surface contract<br/>(spec + hosted schema)"]
         siterepo["jseverino.com repo<br/>(Astro)"]
         brand["branding-engine"]
         drift["sitedrift"]
@@ -41,3 +42,6 @@ flowchart TB
     site --> d1
     mcp -.->|"wrangler · gated D1 ops"| d1
     drift -.->|"DEV vs LIVE review"| site
+    tools -.->|"conforms to"| cordon
+    mcp -.->|"conforms to"| cordon
+    cordon -.->|"schema served at /schemas"| site
