@@ -15,11 +15,10 @@ build stories live on [jseverino.com](https://jseverino.com).
 
 ## The Map
 
-![The full system map: on the local Mac, AI sessions and the tools CLI drive severino-vault-mcp, which reads and writes the Severino Labs vault and syncs a docs manifest plus the shared schema to Severino HQ on the private tailnet; the vault's published subset is snapshotted into the jseverino.com Astro repo alongside branding-engine assets; a git push triggers the Cloudflare Pages build serving jseverino.com with D1 behind it, reviewed by sitedrift against live; the tools CLI and the MCP both conform to the cordon command-surface contract, one shared spec](diagrams/architecture.png)
+![The full system map: on the local Mac, AI sessions and the tools CLI drive severino-vault-mcp, which reads and writes the Severino Labs vault and syncs a docs manifest plus the shared schema to Severino HQ on the private tailnet; the vault's published subset is snapshotted into the jseverino.com Astro repo alongside branding-engine assets; a git push triggers the Cloudflare Pages build serving jseverino.com with D1 behind it, reviewed by sitedrift against live; the tools CLI and the MCP both conform to the cordon command-surface contract, one shared spec](docs/diagrams/architecture.png)
 
-<sup>Diagram source: [`diagrams/architecture.mmd`](diagrams/architecture.mmd),
-pre-rendered with `diagrams/render.sh` so every browser sees the same
-pixels.</sup>
+<sup>Diagram source: [`docs/diagrams/architecture.mmd`](docs/diagrams/architecture.mmd),
+pre-rendered with [`diagram`](https://github.com/joeseverino/tools/blob/main/bin/diagram).</sup>
 
 ## The Pieces
 
@@ -269,7 +268,10 @@ gets a check instead of a convention:
 Nothing private listens on the public internet. Everything above rides this
 layer:
 
-![The infrastructure layer: a Tailscale tailnet with tailnet lock connects admin devices, a homelab host acting as subnet router and residential exit node, and a cloud VPS acting as a datacenter exit node; the homelab VM runs AdGuard Home, Nginx Proxy Manager fronting HQ, AdGuard, and Portainer with TLS, Pocket ID signing into HQ and Portainer, and Severino HQ in Docker Engine; the VPS runs Caddy fronting Uptime Kuma plus a Portainer agent; AdGuard forwards upstream over encrypted Cloudflare DoH; an offline private root CA VM issues internal TLS certificates](diagrams/network-layer.png)
+![The infrastructure layer: a Tailscale tailnet with tailnet lock connects admin devices, a homelab host acting as subnet router and residential exit node, and a cloud VPS acting as a datacenter exit node; the homelab VM runs AdGuard Home, Nginx Proxy Manager fronting HQ, AdGuard, and Portainer with TLS, Pocket ID signing into HQ and Portainer, and Severino HQ in Docker Engine; the VPS runs Caddy fronting Uptime Kuma plus a Portainer agent; AdGuard forwards upstream over encrypted Cloudflare DoH; an offline private root CA VM issues internal TLS certificates](docs/diagrams/network-layer.png)
+
+<sup>Diagram source: [`docs/diagrams/network-layer.mmd`](docs/diagrams/network-layer.mmd),
+pre-rendered with [`diagram`](https://github.com/joeseverino/tools/blob/main/bin/diagram).</sup>
 
 The tailnet is a WireGuard mesh with tailnet lock: a new node can't join
 without being co-signed by a designated signing device, so admin-console

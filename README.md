@@ -21,7 +21,10 @@ Most of my projects are built around real systems I run myself: local AI tooling
 Most of these projects are pieces of one system: a private Obsidian vault is
 the single source of truth, and everything else derives from it.
 
-![AI sessions and the tools CLI drive severino-vault-mcp through one shared code path; the MCP reads and writes the Obsidian vault and syncs the docs manifest to Severino HQ, while the vault's published subset goes to jseverino.com](diagrams/readme-flow.png)
+![AI sessions and the tools CLI drive severino-vault-mcp through one shared code path; the MCP reads and writes the Obsidian vault and syncs the docs manifest to Severino HQ, while the vault's published subset goes to jseverino.com](docs/diagrams/readme-flow.png)
+
+<sup>Diagram source: [`docs/diagrams/readme-flow.mmd`](docs/diagrams/readme-flow.mmd),
+pre-rendered with [`diagram`](https://github.com/joeseverino/tools/blob/main/bin/diagram).</sup>
 
 The full map, with every component, how they talk, and the whys, is in
 **[ARCHITECTURE.md](ARCHITECTURE.md)**.
