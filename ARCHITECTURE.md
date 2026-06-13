@@ -124,10 +124,19 @@ everywhere, automation is not. Even the README is kept honest: every measured
 claim in it has a benchmark script that asserts it in CI.
 
 Each tool emits its whole command surface as one JSON spec — `-h`, the machine
-`--describe`, and an interactive explorer all derive from it, with per-command
-*effect* metadata (read → deploy blast-radius) so an AI agent can risk-gate
-before acting. `tools describe --repos` federates the MCP into the same
-contract, so one document describes the surface across repos.
+`--describe`, an interactive explorer, and even the README command reference and
+shell completions all derive from it (the same emitter that answers `-h` writes
+the docs, so they can't drift), with per-command *effect* metadata (read →
+deploy blast-radius) so an AI agent can risk-gate before acting. `tools describe
+--repos` federates the MCP into the same contract, so one document describes the
+surface across repos.
+
+![tools describe --tui: a full-screen two-pane explorer listing all 17 tools and 72 commands; the right pane shows the selected vault command with its effect classed remote_write over the network and a copy-ready vault sync invocation, all rendered from each tool's describe_spec declaration](docs/images/tools-describe-tui.png)
+
+*`tools tui`: 72 commands across 17 tools, rendered from the one
+`describe_spec()` each tool declares — down to the per-command effect chip
+(here `remote_write · network`), the same signal an AI agent reads to risk-gate
+before running.*
 
 ### [branding-engine](https://github.com/joeseverino/branding-engine) — one brand source
 
