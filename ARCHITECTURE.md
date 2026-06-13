@@ -15,7 +15,7 @@ build stories live on [jseverino.com](https://jseverino.com).
 
 ## The Map
 
-![The full system map: on the local Mac, AI sessions and the tools CLI drive severino-vault-mcp, which reads and writes the Severino Labs vault and syncs a docs manifest plus the shared schema to Severino HQ on the private tailnet; the vault's published subset is snapshotted into the jseverino.com Astro repo alongside branding-engine assets; a git push triggers the Cloudflare Pages build serving jseverino.com with D1 behind it, reviewed by sitedrift against live](diagrams/architecture.png)
+![The full system map: on the local Mac, AI sessions and the tools CLI drive severino-vault-mcp, which reads and writes the Severino Labs vault and syncs a docs manifest plus the shared schema to Severino HQ on the private tailnet; the vault's published subset is snapshotted into the jseverino.com Astro repo alongside branding-engine assets; a git push triggers the Cloudflare Pages build serving jseverino.com with D1 behind it, reviewed by sitedrift against live; the tools CLI and the MCP both conform to the cordon command-surface contract, whose schema is served from the site](diagrams/architecture.png)
 
 <sup>Diagram source: [`diagrams/architecture.mmd`](diagrams/architecture.mmd),
 pre-rendered with `diagrams/render.sh` so every browser sees the same
@@ -139,7 +139,8 @@ shell completions all derive from it (the same emitter that answers `-h` writes
 the docs, so they can't drift), with per-command *effect* metadata (read →
 deploy blast-radius) so an AI agent can risk-gate before acting. `tools describe
 --repos` federates the MCP into the same contract, so one document describes the
-surface across repos.
+surface across repos. That contract is now its own language-agnostic spec —
+**cordon** (below).
 
 ![tools describe --tui: a full-screen two-pane explorer listing all 17 tools and 72 commands; the right pane shows the selected vault command with its effect classed remote_write over the network and a copy-ready vault sync invocation, all rendered from each tool's describe_spec declaration](docs/images/tools-describe-tui.png)
 
@@ -147,6 +148,29 @@ surface across repos.
 `describe_spec()` each tool declares — down to the per-command effect chip
 (here `remote_write · network`), the same signal an AI agent reads to risk-gate
 before running.*
+
+### [cordon](https://github.com/joeseverino/cordon) — the shared contract
+
+The command surface above isn't a `tools`-only convention — it's a standalone,
+language-agnostic spec. **cordon** defines one JSON contract for describing a
+command-line tool: declare it once, render every view (help, completions, docs,
+the agent-readable spec), and have every command carry its *effect* — a fixed
+blast-radius ladder (`read → local_write → vault_write → remote_write →
+deploy`) plus `network` / `interactive` tags — so an automated agent can
+risk-gate before it acts.
+
+Two independent emitters, in two languages, already conform to it: the `tools`
+CLI (Bash, rendered from a `describe_spec` DSL) and `severino-vault-mcp` (Python,
+by introspecting its argparse parser). One JSON Schema validates both — hosted at
+its own `$id`,
+[`jseverino.com/schemas/cordon-v4.json`](https://jseverino.com/schemas/cordon-v4.json),
+and shipped with language-agnostic conformance fixtures so a third
+implementation in any language is just "pass the fixtures."
+
+**Why:** most "describe your CLI" formats answer *what flags exist*; none answer
+*what happens if I run this*. Making `effect` a required field — and the one
+signal both a runtime gate and an AI session stop on — is what lets me hand an
+agent the whole toolchain without it mistaking a production deploy for a read.
 
 ### [branding-engine](https://github.com/joeseverino/branding-engine) — one brand source
 
@@ -228,7 +252,10 @@ gets a check instead of a convention:
   resolves, plus security headers, contrast ratios, and dependency audits.
 - **Command-surface drift.** Each tool's human help and its machine-readable
   JSON render from one spec, so they can't diverge; round-trip, bash/zsh
-  byte-parity, spec↔dispatch, and effect-enum guards enforce it in CI.
+  byte-parity, spec↔dispatch, and effect-enum guards enforce it in CI. The
+  contract itself is the **cordon** spec, and both the Bash and Python emitters
+  validate against its one schema (`tools check` runs the federated `describe
+  --repos` through it), so two languages can't drift on what the contract means.
 - **Supply chain.** The site repo runs SHA-pinned GitHub Actions: CodeQL,
   dependency review, SBOM generation, OpenSSF Scorecard, link checking, and
   scheduled Lighthouse runs, keeping the code-scanning dashboard at zero
