@@ -38,6 +38,16 @@ below can read: Obsidian renders it, the MCP indexes it, HQ imports it, the
 site publishes it. The frontmatter isn't decoration; it's the data model.
 Nothing else is allowed to become a second source of truth.
 
+A fully sanitized, runnable model of this structure ships in the MCP's
+[sample vault](https://github.com/joeseverino/severino-vault-mcp/tree/main/examples/sample-vault):
+the same top-level shape — `01 Projects` / `02 Infrastructure` / `03 Runbooks`
+for indexed operational docs, plus templates, reference, the `05 Writeups` /
+`06 Pages` publishing pipeline, and an archive — with the frontmatter data model,
+the Quick Index navigation hub, and the sensitivity tiers, every host and command
+replaced by `*.example` placeholders. It is a concrete look at how the vault is
+organized (a typed knowledge base, not loose notes) without exposing the real
+one, and the MCP's own test suite runs against it.
+
 ### [severino-vault-mcp](https://github.com/joeseverino/severino-vault-mcp) — the recall layer
 
 A local stdio MCP server. No network port; it runs as a child process of the
