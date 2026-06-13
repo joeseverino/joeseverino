@@ -15,7 +15,7 @@ build stories live on [jseverino.com](https://jseverino.com).
 
 ## The Map
 
-![The full system map: on the local Mac, AI sessions and the tools CLI drive severino-vault-mcp, which reads and writes the Severino Labs vault and syncs a docs manifest plus the shared schema to Severino HQ on the private tailnet; the vault's published subset is snapshotted into the jseverino.com Astro repo alongside branding-engine assets; a git push triggers the Cloudflare Pages build serving jseverino.com with D1 behind it, reviewed by sitedrift against live; the tools CLI and the MCP both conform to the cordon command-surface contract, whose schema is served from the site](diagrams/architecture.png)
+![The full system map: on the local Mac, AI sessions and the tools CLI drive severino-vault-mcp, which reads and writes the Severino Labs vault and syncs a docs manifest plus the shared schema to Severino HQ on the private tailnet; the vault's published subset is snapshotted into the jseverino.com Astro repo alongside branding-engine assets; a git push triggers the Cloudflare Pages build serving jseverino.com with D1 behind it, reviewed by sitedrift against live; the tools CLI and the MCP both conform to the cordon command-surface contract, one shared spec](diagrams/architecture.png)
 
 <sup>Diagram source: [`diagrams/architecture.mmd`](diagrams/architecture.mmd),
 pre-rendered with `diagrams/render.sh` so every browser sees the same
