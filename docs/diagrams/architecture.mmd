@@ -44,3 +44,7 @@ flowchart TB
     drift -.->|"DEV vs LIVE review"| site
     tools -.->|"conforms to"| cordon
     mcp -.->|"conforms to"| cordon
+
+    %% the control-plane hub every surface flows through — styled by .anchor in the shared theme
+    classDef anchor stroke-width:2px;
+    class mcp anchor;

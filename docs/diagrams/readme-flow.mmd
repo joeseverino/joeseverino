@@ -11,3 +11,7 @@ flowchart LR
     mcp <-->|"read / validated writes"| vault
     mcp -->|"hq sync"| hq
     vault -->|"published: true subset"| site
+
+    %% the hub every session and tool flows through — styled by .anchor in the shared theme
+    classDef anchor stroke-width:2px;
+    class mcp anchor;
