@@ -30,8 +30,7 @@ flowchart TB
 
     ai -->|"MCP tools"| mcp
     tools -->|"CLI subcommands"| mcp
-    obsidian -->|"delegates: validate-writeup · schema"| mcp
-    obsidian -->|"preview: site renderer + base.css"| siterepo
+    obsidian -->|"delegates via CLIs"| mcp
     mcp <-->|"search / read / validated writes"| vault
     mcp -->|"hq sync · docs manifest + shared schema"| hq
     tools -->|"hq ship · git push to main"| ci
