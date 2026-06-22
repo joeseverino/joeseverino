@@ -5,7 +5,6 @@ flowchart TB
         mcp["severino-vault-mcp<br/>stdio MCP server + CLI"]
         ai["AI sessions<br/>(Claude Code)"]
         tools["tools<br/>CLI control plane"]
-        obsidian["severino-obsidian<br/>Obsidian plugin<br/>(editor face)"]
         cordon["cordon<br/>command-surface contract<br/>(one shared spec)"]
         siterepo["jseverino.com repo<br/>(Astro)"]
         brand["branding-engine"]
@@ -30,7 +29,6 @@ flowchart TB
 
     ai -->|"MCP tools"| mcp
     tools -->|"CLI subcommands"| mcp
-    obsidian -->|"delegates via CLIs"| mcp
     mcp <-->|"search / read / validated writes"| vault
     mcp -->|"hq sync · docs manifest + shared schema"| hq
     tools -->|"hq ship · git push to main"| ci
@@ -46,7 +44,6 @@ flowchart TB
     drift -.->|"DEV vs LIVE review"| site
     tools -.->|"conforms to"| cordon
     mcp -.->|"conforms to"| cordon
-    obsidian -.->|"conforms to"| cordon
 
     %% the control-plane hub every surface flows through — styled by .anchor in the shared theme
     classDef anchor stroke-width:2px;
