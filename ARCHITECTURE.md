@@ -190,6 +190,30 @@ compared against unchanged production before it ships. On branch previews it
 installs a review shell automatically; on `main` it provably exits without
 touching the production build.
 
+### [severino-obsidian](https://github.com/joeseverino/severino-obsidian) — the editor face
+
+The first Obsidian plugin in the fleet. It makes the vault's editing surface a
+**third face of the one code path**, beside AI sessions and the `site` CLI.
+
+- **Site-accurate preview, not a reimplementation.** A pane renders the active
+  writeup with the site's *own* `renderWriteupHtml` and `base.css` (plus the
+  brand custom properties and the real Inter font), so what you see while writing
+  is what ships — the same renderer, no second copy to drift.
+- **Every command consumes an owner.** The publish gate runs
+  `severino-vault-mcp validate-writeup --draft`; the schema check reads the MCP's
+  canonical `schema`; graphics render through `brand`/`diagram`; sync runs
+  `site sync`. The plugin owns Obsidian glue and nothing else.
+- **A third conformant cordon emitter.** Its command surface is declared once and
+  rendered both as the live commands and as a cordon-v4 contract that passes the
+  same conformance check as the Bash and Python emitters — each command carrying
+  its `effect` and the fleet command it `delegates` to. The blast-radius signal an
+  agent reads is the one the plugin shows and gates on.
+
+**Why:** the vault is the source of truth, so the place it is edited should show
+exactly what ships and run the same validated, effect-gated commands the rest of
+the toolchain runs — not a detached preview that quietly disagrees with
+production.
+
 ## How a Change Moves Through the System
 
 **An operational question.** I ask an AI session "how do I renew the homelab
