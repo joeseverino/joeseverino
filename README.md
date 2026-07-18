@@ -25,9 +25,4 @@ pre-rendered with [`diagram`](https://github.com/joeseverino/tools/blob/main/bin
 The full map, with every component, how they talk, and the whys, is in
 **[ARCHITECTURE.md](ARCHITECTURE.md)**.
 
-## Links
-
-- Portfolio: https://jseverino.com
-- LinkedIn: https://linkedin.com/in/joeseverino
-
 **Certifications:** CCNA, CompTIA Security+, ISC2 Certified in Cybersecurity (CC)
