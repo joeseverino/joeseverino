@@ -9,7 +9,7 @@ else reads from one of the two.
 This page is the map and the reasoning. Each repository documents its own
 internals; the build stories are on [jseverino.com](https://jseverino.com).
 
-![On the Mac, AI sessions and the tools CLI reach the MCP servers through one code path; the servers read and write the Obsidian vault through vault-engine and send a docs manifest to Severino HQ on the homelab, which reads and manages Cloudflare zones and Access with a scoped token; the vault's published subset becomes jseverino.com on Cloudflare Pages](docs/diagrams/system-map.png)
+![On the Mac, the vault MCP, used by AI sessions and the tools CLI, reads and writes the Obsidian vault and sends its docs to Severino HQ on the homelab; HQ reads and manages Cloudflare zones and Access with a scoped token; the vault's published subset becomes jseverino.com on Cloudflare Pages](docs/diagrams/system-map.png)
 
 <sup>Diagram source: [`docs/diagrams/system-map.fig`](docs/diagrams/system-map.fig),
 pre-rendered with [`brand figure`](https://github.com/joeseverino/branding-engine).</sup>
