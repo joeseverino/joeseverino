@@ -1,0 +1,21 @@
+# The vault owns knowledge, HQ owns infrastructure; everything else reads from them.
+direction: right
+
+Mac [dashed] {
+  Vault MCP [icon: grid, note: AI · tools CLI]
+  Obsidian vault [icon: file, anchor, note: knowledge · content]
+}
+
+Homelab [dashed] {
+  Severino HQ [icon: server, note: derived infrastructure]
+}
+
+Cloudflare [dashed] {
+  jseverino.com [icon: globe, note: Astro · Pages]
+  Zones and Access [icon: shield]
+}
+
+Vault MCP <> Obsidian vault: writes
+Vault MCP > Severino HQ: docs
+Severino HQ > Zones and Access: token
+Obsidian vault > jseverino.com: publish
