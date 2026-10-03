@@ -1,0 +1,42 @@
+# Every piece, where it runs, and what it talks to.
+direction: right
+
+Mac [dashed] {
+  tools CLI [icon: terminal, note: cordon contract]
+  AI sessions [icon: bot]
+  severino-vault-mcp [icon: grid, note: ops vault]
+  severino-edu-mcp [icon: grid, note: coursework]
+  vault-engine [icon: code, note: schema · search · writes]
+  Obsidian vault [icon: file, anchor, note: knowledge · content]
+}
+
+GitHub [dashed] {
+  jseverino.com repo [icon: code, note: MDX snapshot]
+  Actions [icon: shield, note: gates · attested releases]
+}
+
+Homelab [dashed] {
+  Severino HQ [icon: server, note: derived infrastructure]
+}
+
+Cloudflare [dashed] {
+  Pages [icon: globe, note: nonce CSP · D1 · Turnstile]
+  Access [icon: lock, note: previews by service token]
+  Zones [icon: cloud, note: DNS as code]
+}
+
+Tailscale [icon: wifi, note: tailnet · ACL]
+
+tools CLI > severino-vault-mcp: same code path
+AI sessions > severino-vault-mcp: MCP
+AI sessions > severino-edu-mcp: MCP
+severino-vault-mcp > vault-engine
+severino-edu-mcp > vault-engine
+vault-engine <> Obsidian vault: validated writes
+Obsidian vault > jseverino.com repo: content sync PR
+jseverino.com repo > Actions
+Actions > Pages: deploy
+severino-vault-mcp > Severino HQ: docs manifest
+Severino HQ > Zones: scoped token
+Severino HQ > Access
+Severino HQ > Tailscale: scoped key
