@@ -13,4 +13,4 @@ jobs:
   # The whole CI surface is cordon's reusable gate; locally the same gate
   # is scripts/check.sh. The single required check: `cordon / gate`.
   cordon:
-    uses: joeseverino/cordon/.github/workflows/cordon-gate.yml@main
+    uses: joeseverino/cordon/.github/workflows/cordon-gate.yml@v2
