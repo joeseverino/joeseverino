@@ -1,0 +1,28 @@
+# The vault owns knowledge, HQ owns infrastructure; everything else reads from them.
+direction: right
+
+AI sessions [icon: bot]
+
+Mac [dashed] {
+  tools CLI [icon: terminal, note: cordon contract]
+  MCP servers [icon: grid, note: vault · education]
+  vault-engine [icon: code, note: schema · search · writes]
+  Obsidian vault [icon: file, anchor, note: source of truth]
+}
+
+Homelab [dashed] {
+  Severino HQ [icon: server, note: derived estate · one gated path]
+}
+
+Cloudflare [dashed] {
+  jseverino.com [icon: globe, note: Astro · nonce CSP · D1]
+  Zones and Access [icon: shield, note: read and managed by HQ]
+}
+
+AI sessions > MCP servers: MCP
+tools CLI > MCP servers: same code path
+MCP servers > vault-engine
+vault-engine <> Obsidian vault: validated writes
+MCP servers > Severino HQ: docs manifest
+Severino HQ > Zones and Access: scoped token
+Obsidian vault > jseverino.com: published subset
