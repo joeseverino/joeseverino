@@ -6,7 +6,7 @@ Technical Solutions Engineer at World Wide Technology. Most of my projects are b
 
 - **[severino-hq](https://github.com/joeseverino/severino-hq)** - Self-hosted operations hub that derives its picture of my infrastructure from the credentials it holds. Every change goes through one gated path shared by the web UI, API, MCP, and CLI.
 - **[jseverino.com](https://github.com/joeseverino/jseverino.com)** - My site and writeups, published from a private Obsidian vault with Astro on Cloudflare Pages. Strict nonce CSP, edge-tested, and released with signed provenance.
-- **[severino-vault-mcp](https://github.com/joeseverino/severino-vault-mcp)** - Local-first MCP server that gives AI tools sensitivity-gated access to an operations vault, built on [vault-engine](https://github.com/joeseverino/vault-engine), its reusable core on PyPI.
+- **[severino-vault-mcp](https://github.com/joeseverino/severino-vault-mcp)** - Local-first MCP server that gives AI tools sensitivity-gated access to my Obsidian vaults: one Go binary, a schema profile per vault, validated atomic writes.
 - **[sitedrift](https://github.com/joeseverino/sitedrift)** - [npm package](https://www.npmjs.com/package/sitedrift) for reviewing DEV against LIVE on the same route, with a Cloudflare Pages addon, an MCP interface, and SLSA provenance.
 - **[tools](https://github.com/joeseverino/tools)** - Personal macOS CLI suite where one declaration per tool renders its help, completions, docs, and machine-readable spec.
 - **[cordon](https://github.com/joeseverino/cordon)** - Command-surface contract: declare a CLI once, render every view from it, and give each command a blast radius an agent can check before it acts.

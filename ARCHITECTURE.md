@@ -9,7 +9,7 @@ else reads from one of the two.
 This page is the map and the reasoning. Each repository documents its own
 internals; the build stories are on [jseverino.com](https://jseverino.com).
 
-![On the Mac, the tools CLI and AI sessions reach severino-vault-mcp, and AI sessions reach severino-edu-mcp; both servers read and write the Obsidian vault through vault-engine. The vault's published subset goes as a content sync pull request to the jseverino.com repo on GitHub, where Actions gates it and deploys to Cloudflare Pages. severino-vault-mcp sends its docs manifest to Severino HQ on the homelab, which reads and manages Cloudflare Access and Zones with a scoped token and Tailscale with a scoped key](docs/diagrams/architecture.png)
+![On the Mac, the tools CLI and AI sessions reach severino-vault-mcp, which reads and writes the Obsidian vault. The vault's published subset goes as a content sync pull request to the jseverino.com repo on GitHub, where Actions gates it and deploys to Cloudflare Pages. severino-vault-mcp sends its docs manifest to Severino HQ on the homelab, which reads and manages Cloudflare Access and Zones with a scoped token and Tailscale with a scoped key](docs/diagrams/architecture.png)
 
 <sup>Diagram source: [`docs/diagrams/architecture.fig`](docs/diagrams/architecture.fig),
 pre-rendered with [`brand figure`](https://github.com/joeseverino/branding-engine).</sup>
@@ -25,15 +25,12 @@ and the frontmatter is the data model. A sanitized, runnable model of its
 structure ships as the MCP's
 [sample vault](https://github.com/joeseverino/severino-vault-mcp/tree/main/examples/sample-vault).
 
-### [vault-engine](https://github.com/joeseverino/vault-engine) and the MCP servers
+### [severino-vault-mcp](https://github.com/joeseverino/severino-vault-mcp)
 
-vault-engine is the domain-agnostic core, published on PyPI: schema profiles,
-a frontmatter index, ranked search, a task ledger, and atomic writes.
-[severino-vault-mcp](https://github.com/joeseverino/severino-vault-mcp)
-serves my operations vault through it, and
-[severino-edu-mcp](https://github.com/joeseverino/severino-edu-mcp) serves my
-coursework vault through the same engine with a different profile. A second
-vault is a second profile, not a fork.
+One Go binary serves every vault: schema profiles, a frontmatter index, ranked
+search, a task ledger, and atomic writes. My operations and coursework vaults
+are two profiles of the same server, and a third vault is a third profile, not
+a fork.
 
 The MCP exists to stop one failure: an assistant writing a generic tutorial
 when I already have a four-line runbook. It runs over stdio from local files

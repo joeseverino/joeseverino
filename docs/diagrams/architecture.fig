@@ -4,9 +4,7 @@ direction: right
 Mac [dashed] {
   tools CLI [icon: terminal, note: cordon contract]
   AI sessions [icon: bot]
-  severino-vault-mcp [icon: grid, note: ops vault]
-  severino-edu-mcp [icon: grid, note: coursework]
-  vault-engine [icon: code, note: schema · search · writes]
+  severino-vault-mcp [icon: grid, note: every vault · schema · search]
   Obsidian vault [icon: file, anchor, note: knowledge · content]
 }
 
@@ -29,10 +27,7 @@ Tailscale [icon: wifi, note: tailnet · ACL]
 
 tools CLI > severino-vault-mcp: same code path
 AI sessions > severino-vault-mcp: MCP
-AI sessions > severino-edu-mcp: MCP
-severino-vault-mcp > vault-engine
-severino-edu-mcp > vault-engine
-vault-engine <> Obsidian vault: validated writes
+severino-vault-mcp <> Obsidian vault: validated writes
 Obsidian vault > jseverino.com repo: content sync PR
 jseverino.com repo > Actions
 Actions > Pages: deploy
