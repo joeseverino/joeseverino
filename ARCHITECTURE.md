@@ -9,7 +9,7 @@ else reads from one of the two.
 This page is the map and the reasoning. Each repository documents its own
 internals; the build stories are on [jseverino.com](https://jseverino.com).
 
-![On the Mac, the tools CLI and AI sessions reach severino-vault-mcp, which reads and writes the Obsidian vault. The vault's published subset goes as a content sync pull request to the jseverino.com repo on GitHub, where Actions gates it and deploys to Cloudflare Pages. severino-vault-mcp sends its docs manifest to Severino HQ on the homelab, which reads and manages Cloudflare Access and Zones with a scoped token and Tailscale with a scoped key](docs/diagrams/architecture.png)
+![On the Mac, the tools CLI and AI sessions reach severino-vault-mcp, which reads and writes the Obsidian vault, and AI sessions also reach Severino HQ over MCP. The vault's published subset goes as a content sync pull request to the jseverino.com repo on GitHub, where Actions gates it and deploys it as a Cloudflare Worker. severino-vault-mcp sends its docs manifest to Severino HQ on the homelab, which reads and manages Cloudflare Access and Zones with a scoped token and Tailscale with a scoped key](docs/diagrams/architecture.png)
 
 <sup>Diagram source: [`docs/diagrams/architecture.fig`](docs/diagrams/architecture.fig),
 pre-rendered with [`brand figure`](https://github.com/joeseverino/branding-engine).</sup>
@@ -27,41 +27,57 @@ structure ships as the MCP's
 
 ### [severino-vault-mcp](https://github.com/joeseverino/severino-vault-mcp)
 
-One Go binary serves every vault: schema profiles, a frontmatter index, ranked
-search, a task ledger, and atomic writes. My operations and coursework vaults
-are two profiles of the same server, and a third vault is a third profile, not
-a fork.
+One static Go binary serves every vault: schema profiles, a section-ranked
+index, a work queue per project, and validated atomic writes. My operations
+and coursework vaults are two built-in profiles of the same server; a further
+vault plugs in as a provider whose tools the server re-exports, so search, the
+gate, and validation never cross vaults. It installs as a Claude Code or Codex
+plugin with a skill that tells an agent how to use it.
 
 The MCP exists to stop one failure: an assistant writing a generic tutorial
 when I already have a four-line runbook. It runs over stdio from local files
 only. The sensitivity tier decides what it releases, in code rather than in a
-prompt, and `restricted` bodies need an explicit local unlock. The same
+prompt, and `restricted` bodies need a Touch ID approval through 1Password. The same
 functions back its CLI, so a script and an AI session validate and write
 through one path.
 
 ### [Severino HQ](https://github.com/joeseverino/severino-hq)
 
 A self-hosted operations hub, reachable only over Tailscale, with passkey-first
-sign-in through a self-hosted Pocket ID. A controller holds scoped Cloudflare
-and Tailscale credentials and reads what each can see; HQ joins those readings
-into machines, services, and domains, and derives the rest. Nothing about the
-infrastructure is authored by hand, so there is no second copy to drift.
+sign-in through a self-hosted Pocket ID. A controller in a separate,
+short-lived container holds scoped credentials for Cloudflare, Tailscale,
+AdGuard Home, and the homelab's proxy and Docker host, and reads what each can
+see; HQ joins those readings into machines, services, domains,
+certificates, and containers, and derives the rest. Nothing about the
+infrastructure is authored by hand, so there is no second copy to drift. A
+[demo](https://demo.jseverino.com/) shows its pages filled with an example
+homelab.
 
-Every change, whether from the web UI, the API, MCP, or the CLI, goes through
-one gated path, and a write needs a connection that declares it manages that
-record. Private domains plug in as separately released, signed extensions
-against a public contract, which is why the host can be public. Code reaches
-it only through CI, a scanned image, and a self-hosted runner that dials out,
-so nothing inbound is ever opened.
+Every change, whether from the web UI, the API, MCP, the CLI, or an
+extension, goes through one gated path, and a write needs a connection that
+declares it manages that record. Private domains plug in as separately
+released extensions against a public SDK, which is why the host can be
+public. CI composes the host and its extensions into one Sigstore-signed
+image, and a self-hosted runner that dials out deploys it after approval; the
+host verifies the signature before it runs anything, and nothing inbound is
+ever opened.
+
+AI agents operate HQ through MCP and the API, each with its own revocable
+token, so the audit log names the agent behind every change. Per capability,
+policy lets a call run, holds it until a person approves it in the web UI, or
+refuses it. No token can approve its own request, and one switch pauses every
+agent and fails closed.
 
 ### [jseverino.com](https://github.com/joeseverino/jseverino.com)
 
 The public subset of the vault. A sync turns published documents into MDX with
-clean image masters and opens a pull request; Cloudflare Pages builds it with
-Astro and serves it with a per-request CSP nonce. A D1 contact form behind
-Turnstile is the only dynamic surface. Previews answer only to a Cloudflare
-Access service token, and a tagged release ships the build with an SBOM and
-Sigstore attestations anyone can verify with `gh attestation verify`.
+clean image masters and opens a pull request; Actions builds it with Astro,
+with no access to the vault, and deploys it as one Cloudflare Worker. Every
+page is prerendered under a build-time hash CSP, so markup that arrives through
+content never runs. A D1 contact form behind Turnstile is the only dynamic
+surface. Previews are Worker versions behind Cloudflare Access, and a tagged
+release ships the build with an SBOM and Sigstore attestations anyone can
+verify with `gh attestation verify`.
 
 ### [tools](https://github.com/joeseverino/tools) and [cordon](https://github.com/joeseverino/cordon)
 

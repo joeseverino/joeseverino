@@ -11,7 +11,7 @@ Homelab [dashed] {
 }
 
 Cloudflare [dashed] {
-  jseverino.com [icon: globe, note: Astro · Pages]
+  jseverino.com [icon: globe, note: Astro · Worker]
   Zones and Access [icon: shield]
 }
 

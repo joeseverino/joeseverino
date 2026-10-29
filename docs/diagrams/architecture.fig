@@ -18,19 +18,20 @@ Homelab [dashed] {
 }
 
 Cloudflare [dashed] {
-  Pages [icon: globe, note: nonce CSP · D1 · Turnstile]
-  Access [icon: lock, note: previews by service token]
-  Zones [icon: cloud, note: DNS as code]
+  Worker [icon: globe, note: hash CSP · D1 · Turnstile]
+  Access [icon: lock, note: gates previews]
+  Zones [icon: cloud, note: records · WAF]
 }
 
 Tailscale [icon: wifi, note: tailnet · ACL]
 
 tools CLI > severino-vault-mcp: same code path
 AI sessions > severino-vault-mcp: MCP
+AI sessions > Severino HQ: MCP
 severino-vault-mcp <> Obsidian vault: validated writes
 Obsidian vault > jseverino.com repo: content sync PR
 jseverino.com repo > Actions
-Actions > Pages: deploy
+Actions > Worker: deploy
 severino-vault-mcp > Severino HQ: docs manifest
 Severino HQ > Zones: scoped token
 Severino HQ > Access
